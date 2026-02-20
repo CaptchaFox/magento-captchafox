@@ -3,7 +3,7 @@
 [![Minimum PHP Version](https://img.shields.io/badge/php-%3E%3D%208.0-green)](https://php.net/)
 [![Minimum Magento Version](https://img.shields.io/badge/magento-%3E%3D%202.4.4-green)](https://business.adobe.com/products/magento/magento-commerce.html)
 
-[CaptchaFox](https://docs.captchafox.com/getting-started/) offers GDPR-compliant CAPTCHA protection for you Magento OpenSource or Adobe Commerce forms.
+[CaptchaFox](https://captchafox.com) offers GDPR-compliant CAPTCHA protection for you Magento OpenSource or Adobe Commerce forms.
 
 <img alt="Admin Login" src="screenshot-admin.png" width="50%"> <img alt="Login" src="screenshot-login.png" width="45%">
 
