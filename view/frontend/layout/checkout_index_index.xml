@@ -1,0 +1,83 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright (C) 2024 Scoria Labs GmbH
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceBlock name="checkout.root">
+            <arguments>
+                <argument name="jsLayout" xsi:type="array">
+                    <item name="components" xsi:type="array">
+                        <item name="checkout" xsi:type="array">
+                            <item name="children" xsi:type="array">
+                                <item name="authentication" xsi:type="array">
+                                    <item name="children" xsi:type="array">
+                                        <item name="captchafox" xsi:type="array">
+                                            <item name="component" xsi:type="string">
+                                                ScoriaLabs_CaptchaFox/js/view/captchafox</item>
+                                            <item name="displayArea" xsi:type="string">
+                                                additional-login-form-fields</item>
+                                            <item name="action" xsi:type="string">login-ajax</item>
+                                            <item name="configSource" xsi:type="string">
+                                                captchafoxConfig</item>
+                                            <item name="autoRendering" xsi:type="boolean">false</item>
+                                        </item>
+                                    </item>
+                                </item>
+                                <item name="steps" xsi:type="array">
+                                    <item name="children" xsi:type="array">
+                                        <item name="shipping-step" xsi:type="array">
+                                            <item name="children" xsi:type="array">
+                                                <item name="shippingAddress" xsi:type="array">
+                                                    <item name="children" xsi:type="array">
+                                                        <item name="customer-email" xsi:type="array">
+                                                            <item name="children" xsi:type="array">
+                                                                <item
+                                                                    name="additional-login-form-fields"
+                                                                    xsi:type="array">
+                                                                    <item name="children"
+                                                                        xsi:type="array">
+                                                                        <item name="captcha"
+                                                                            xsi:type="array">
+                                                                            <item name="component"
+                                                                                xsi:type="string">
+                                                                                ScoriaLabs_CaptchaFox/js/view/component</item>
+                                                                            <item name="displayArea"
+                                                                                xsi:type="string">
+                                                                                additional-login-form-fields</item>
+                                                                            <item name="action"
+                                                                                xsi:type="string">
+                                                                                login-ajax</item>
+                                                                            <item
+                                                                                name="configSource"
+                                                                                xsi:type="string">
+                                                                                captchafoxConfig</item>
+                                                                            <item
+                                                                                name="autoRendering"
+                                                                                xsi:type="boolean">
+                                                                                true</item>
+                                                                        </item>
+                                                                    </item>
+                                                                </item>
+                                                            </item>
+                                                        </item>
+                                                    </item>
+                                                </item>
+                                            </item>
+                                        </item>
+                                    </item>
+                                </item>
+                            </item>
+                        </item>
+                    </item>
+                </argument>
+            </arguments>
+        </referenceBlock>
+    </body>
+</page>

@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright (C) 2026 Scoria Labs GmbH
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="ScoriaLabs_CaptchaFox::css/captchafox.css" />
+    </head>
+    <body>
+        <referenceContainer name="before.body.end">
+            <block class="CaptchaFox\Core\Block\CaptchaFox\Config"
+                template="ScoriaLabs_CaptchaFox::captchafox/config.phtml"
+                ifconfig="captchafox/frontend/enabled" />
+        </referenceContainer>
+        <referenceBlock name="authentication-popup">
+            <arguments>
+                <argument name="jsLayout" xsi:type="array">
+                    <item name="components" xsi:type="array">
+                        <item name="authenticationPopup" xsi:type="array">
+                            <item name="children" xsi:type="array">
+                                <item name="captchafox" xsi:type="array">
+                                    <item name="component" xsi:type="string">
+                                        ScoriaLabs_CaptchaFox/js/view/captchafox</item>
+                                    <item name="displayArea" xsi:type="string">
+                                        additional-login-form-fields</item>
+                                    <item name="action" xsi:type="string">login-ajax</item>
+                                    <item name="configSource" xsi:type="string">captchafoxConfig</item>
+                                    <item name="autoRendering" xsi:type="boolean">false</item>
+                                </item>
+                            </item>
+                        </item>
+                    </item>
+                </argument>
+            </arguments>
+        </referenceBlock>
+        <referenceContainer name="footer">
+            <block name="captchafox.newsletter" class="CaptchaFox\Core\Block\CaptchaFox"
+                ifconfig="captchafox/frontend/enabled">
+                <action method="setAction">
+                    <argument name="action" xsi:type="string">newsletter</argument>
+                </action>
+            </block>
+            <!-- The captchafox element need to be moved in the newsletter block in JS. There are no
+            other possibilities. You can remove this block if needed. -->
+            <block name="captchafox.newsletter.append.to"
+                class="CaptchaFox\Core\Block\Newsletter"
+                template="ScoriaLabs_CaptchaFox::newsletter.phtml"
+                ifconfig="captchafox/frontend/enabled" />
+        </referenceContainer>
+    </body>
+</page>

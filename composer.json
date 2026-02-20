@@ -1,0 +1,26 @@
+{
+  "name": "captchafox/magento",
+  "description": "Protect your store from bots and spam with CaptchaFox",
+  "require": {
+    "php": "^8",
+    "magento/module-config": "*",
+    "magento/framework": "*"
+  },
+  "type": "magento2-module",
+  "version": "1.0.0",
+  "autoload": {
+    "files": [
+      "registration.php"
+    ],
+    "psr-4": {
+      "CaptchaFox\\Core\\": ""
+    }
+  },
+  "authors": [
+    {
+      "name": "Scoria Labs",
+      "homepage": "https://captchafox.com/",
+      "role": "Developer"
+    }
+  ]
+}

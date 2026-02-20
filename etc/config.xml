@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright (C) 2026 Scoria Labs GmbH
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <captchafox>
+            <frontend>
+                <enabled>0</enabled>
+                <theme>light</theme>
+                <language>auto</language>
+                <mode>inline</mode>
+            </frontend>
+            <adminhtml>
+                <enabled>0</enabled>
+                <theme>light</theme>
+                <language>auto</language>
+                <mode>inline</mode>
+            </adminhtml>
+        </captchafox>
+    </default>
+</config>

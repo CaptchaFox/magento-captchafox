@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright (C) 2025 Scoria Labs GmbH
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="CaptchaFox\Core\Observer\Validate\Frontend">
+        <arguments>
+            <argument name="persistor" xsi:type="object">
+                CaptchaFox\Core\Model\Persistor\Frontend</argument>
+            <argument name="data" xsi:type="array">
+                <item name="actions" xsi:type="array">
+                    <item name="contact" xsi:type="string">Magento\Contact\Controller\Index\Post</item>
+                    <item name="password" xsi:type="string">
+                        Magento\Customer\Controller\Account\ForgotPasswordPost</item>
+                    <item name="register" xsi:type="string">
+                        Magento\Customer\Controller\Account\CreatePost</item>
+                    <item name="login" xsi:type="string">
+                        Magento\Customer\Controller\Account\LoginPost</item>
+                    <item name="login-ajax" xsi:type="string">Magento\Customer\Controller\Ajax\Login</item>
+                    <item name="review" xsi:type="string">Magento\Review\Controller\Product\Post</item>
+                    <item name="send-friend" xsi:type="string">
+                        Magento\SendFriend\Controller\Product\Sendmail</item>
+                    <item name="newsletter" xsi:type="string">
+                        Magento\Newsletter\Controller\Subscriber\NewAction</item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="CaptchaFox\Core\Model\Persistor\Frontend">
+        <arguments>
+            <argument name="reviewSession" xsi:type="object">Magento\Review\Model\Session</argument>
+        </arguments>
+    </type>
+    <preference for="CaptchaFox\Core\Model\ConfigProviderInterface"
+        type="CaptchaFox\Core\Model\ConfigProvider\Frontend" />
+</config>

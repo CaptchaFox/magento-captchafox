@@ -1,0 +1,42 @@
+<?php /** @var \CaptchaFox\Core\Block\CaptchaFox $block */ ?>
+<?php /** @var \Magento\Framework\Escaper $escaper */ ?>
+<div id="<?= $escaper->escapeHtmlAttr($block->getId()) ?>" class="captchafox" data-bind="scope:'captchafox-<?= $escaper->escapeHtmlAttr($block->getId()) ?>'">
+    <!-- ko template: getTemplate() --><!-- /ko -->
+</div>
+    <style type="text/css">
+        .form-customer-login .captchafox, .customer-account-create .captchafox {
+            margin: 0px;
+        }
+
+        #social-form-create .captchafox {
+            padding-top: 5%;
+        }
+
+        #social-form-password-forget .captchafox {
+            padding-top: 5%;
+        }
+
+        .captchafox {
+            margin-top: 15px;
+            margin-bottom: 15px;
+        }
+    </style>
+<script type="text/x-magento-init">
+{
+    "#<?= $escaper->escapeJs($block->getId()) ?>": {
+        "Magento_Ui/js/core/app": {
+            "components": {
+                "captchafox-<?= $escaper->escapeJs($block->getId()) ?>": {
+                    "component": "ScoriaLabs_CaptchaFox/js/view/captchafox",
+                    "action": "<?= $escaper->escapeJs($block->getAction()) ?>",
+                    "mode": "<?= $escaper->escapeJs($block->getMode()) ?>",
+                    "lang": "<?= $escaper->escapeJs($block->getLanguage()) ?>",
+                    "theme": "<?= $escaper->escapeJs($block->getTheme()) ?>",
+                    "containerId": "<?= $escaper->escapeJs($block->getId()) ?>",
+                    "configSource": "captchafoxConfig"
+                }
+            }
+        }
+    }
+}
+</script>
