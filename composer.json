@@ -1,16 +1,16 @@
 {
   "name": "captchafox/magento",
+  "version": "1.1.0",
   "description": "Protect your store from bots and spam with CaptchaFox",
+  "type": "magento2-module",
+  "license": [
+    "MIT"
+  ],
   "require": {
     "php": "^8",
     "magento/module-config": "*",
     "magento/framework": "*"
   },
-  "license": [
-    "MIT"
-  ],
-  "type": "magento2-module",
-  "version": "1.0.0",
   "autoload": {
     "files": [
       "registration.php"

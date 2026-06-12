@@ -10,15 +10,29 @@
 <csp_whitelist xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Csp:etc/csp_whitelist.xsd">
     <policies>
-        <policy id="frame-src">
+        <policy id="script-src">
             <values>
-                <value id="captchafox" type="host">captchafox.com</value>
+                <value id="captchafox_subdomains" type="host">*.captchafox.com</value>
+                <value id="captchafox_blob" type="host">blob:</value>
+            </values>
+        </policy>
+        <policy id="connect-src">
+            <values>
                 <value id="captchafox_subdomains" type="host">*.captchafox.com</value>
             </values>
         </policy>
-        <policy id="script-src">
+        <policy id="style-src">
             <values>
-                <value id="captchafox" type="host">captchafox.com</value>
+                <value id="captchafox_subdomains" type="host">*.captchafox.com</value>
+            </values>
+        </policy>
+        <policy id="media-src">
+            <values>
+                <value id="captchafox_subdomains" type="host">*.captchafox.com</value>
+            </values>
+        </policy>
+        <policy id="img-src">
+            <values>
                 <value id="captchafox_subdomains" type="host">*.captchafox.com</value>
             </values>
         </policy>
