@@ -10,14 +10,15 @@ declare(strict_types=1);
 
 namespace CaptchaFox\Core\Observer\Validate;
 
-use Magento\Customer\Controller\Ajax\Login as AjaxLoginPost;
 use Magento\Customer\Model\Session as CustomerSession;
 use Magento\Framework\App\Response\Http as Response;
 use Magento\Framework\App\Response\RedirectInterface;
 use Magento\Framework\Message\ManagerInterface;
 use Magento\Framework\Phrase;
 use Magento\Framework\Serialize\Serializer\Json;
+use Psr\Log\LoggerInterface;
 use CaptchaFox\Core\Helper\Config;
+use CaptchaFox\Core\Model\Config\Source\Forms\Frontend as Forms;
 use CaptchaFox\Core\Model\PersistorInterface;
 use CaptchaFox\Core\Model\Validator;
 use CaptchaFox\Core\Observer\Validate;
@@ -33,6 +34,7 @@ class Frontend extends Validate
      * @param Json $json
      * @param Config $config
      * @param RedirectInterface $redirect
+     * @param LoggerInterface $logger
      * @param CustomerSession $customerSession
      * @param PersistorInterface|null $persistor
      * @param array $data
@@ -44,13 +46,24 @@ class Frontend extends Validate
         Json $json,
         Config $config,
         RedirectInterface $redirect,
+        LoggerInterface $logger,
         CustomerSession $customerSession,
         ?PersistorInterface $persistor = null,
         array $data = []
     ) {
         $this->customerSession = $customerSession;
 
-        parent::__construct($messageManager, $response, $validator, $json, $config, $redirect, $persistor, $data);
+        parent::__construct(
+            $messageManager,
+            $response,
+            $validator,
+            $json,
+            $config,
+            $redirect,
+            $logger,
+            $persistor,
+            $data
+        );
     }
 
 
@@ -69,14 +82,13 @@ class Frontend extends Validate
     }
 
     /**
-     * Test if the form is enabled
+     * Retrieve the forms enabled in the configuration
      *
-     * @param string $form
-     * @return bool
+     * @return string[]
      */
-    public function isFormEnabled(string $form): bool
+    public function getEnabledForms(): array
     {
-        return in_array($form, $this->config->getFrontendForms());
+        return $this->config->getFrontendForms();
     }
 
     /**
@@ -96,7 +108,7 @@ class Frontend extends Validate
      */
     public function getCfResponse(): ?string
     {
-        if ($this->action instanceof AjaxLoginPost) {
+        if ($this->getForm() === Forms::FORM_LOGIN_AJAX) {
             $response = $this->json->unserialize($this->request?->getContent() ?? '{}')['cf-captcha-response'] ?? null;
             return is_string($response) ? $response : null;
         }
@@ -111,7 +123,7 @@ class Frontend extends Validate
      */
     protected function error(Phrase $message): void
     {
-        if ($this->action instanceof AjaxLoginPost) {
+        if ($this->getForm() === Forms::FORM_LOGIN_AJAX) {
             $data = [
                 'errors' => true,
                 'message' => $message

@@ -20,6 +20,7 @@ use Magento\Framework\Event\ObserverInterface;
 use Magento\Framework\Message\ManagerInterface;
 use Magento\Framework\Phrase;
 use Magento\Framework\Serialize\Serializer\Json;
+use Psr\Log\LoggerInterface;
 use CaptchaFox\Core\Helper\Config;
 use CaptchaFox\Core\Model\PersistorInterface;
 use CaptchaFox\Core\Model\Validator;
@@ -38,9 +39,13 @@ abstract class Validate implements ObserverInterface
 
     protected RedirectInterface $redirect;
 
+    protected LoggerInterface $logger;
+
     protected ?PersistorInterface $persistor = null;
 
-    protected array $actions = [];
+    protected array $routes = [];
+
+    protected bool $checkedRoutes = false;
 
     public ?ActionInterface $action = null;
 
@@ -53,6 +58,7 @@ abstract class Validate implements ObserverInterface
      * @param Json $json
      * @param Config $config
      * @param RedirectInterface $redirect
+     * @param LoggerInterface $logger
      * @param PersistorInterface|null $persistor
      * @param array $data
      */
@@ -63,6 +69,7 @@ abstract class Validate implements ObserverInterface
         Json $json,
         Config $config,
         RedirectInterface $redirect,
+        LoggerInterface $logger,
         ?PersistorInterface $persistor = null,
         array $data = []
     ) {
@@ -72,8 +79,33 @@ abstract class Validate implements ObserverInterface
         $this->json           = $json;
         $this->config         = $config;
         $this->redirect       = $redirect;
+        $this->logger         = $logger;
         $this->persistor      = $persistor;
-        $this->actions        = $data['actions'] ?? [];
+        $this->routes         = $this->prepareRoutes($data['routes'] ?? []);
+
+        if (!empty($data['actions'])) {
+            $this->logger->warning(
+                'CaptchaFox: the "actions" observer argument maps controller classes and is no longer '
+                . 'supported, it was ignored. Map full action names with the "routes" argument instead.'
+            );
+        }
+    }
+
+    /**
+     * Normalise the configured routes
+     *
+     * @param array $routes
+     * @return string[]
+     */
+    protected function prepareRoutes(array $routes): array
+    {
+        $prepared = [];
+
+        foreach ($routes as $fullActionName => $form) {
+            $prepared[strtolower((string)$fullActionName)] = (string)$form;
+        }
+
+        return $prepared;
     }
 
     /**
@@ -142,13 +174,48 @@ abstract class Validate implements ObserverInterface
             return false;
         }
 
-        foreach ($this->actions as $form => $instance) {
-            if ($this->isFormEnabled($form) && is_a($this->action, $instance)) {
-                return true;
-            }
+        $this->checkRoutes();
+
+        $form = $this->getForm();
+
+        return $form !== null && $this->isFormEnabled($form);
+    }
+
+    /**
+     * Retrieve the CaptchaFox form protecting the current request
+     *
+     * @return string|null
+     */
+    public function getForm(): ?string
+    {
+        if ($this->request === null) {
+            return null;
         }
 
-        return false;
+        return $this->routes[strtolower($this->request->getFullActionName())] ?? null;
+    }
+
+    /**
+     * Warn once when an enabled form has no route mapped and would silently not be validated
+     *
+     * @return void
+     */
+    protected function checkRoutes(): void
+    {
+        if ($this->checkedRoutes) {
+            return;
+        }
+        $this->checkedRoutes = true;
+
+        $unmapped = array_diff($this->getEnabledForms(), $this->routes);
+        if ($unmapped) {
+            $this->logger->warning(
+                sprintf(
+                    'CaptchaFox: no route is mapped for the enabled form(s) "%s", they are not validated.',
+                    implode(', ', $unmapped)
+                )
+            );
+        }
     }
 
     /**
@@ -157,7 +224,17 @@ abstract class Validate implements ObserverInterface
      * @param string $form
      * @return bool
      */
-    abstract public function isFormEnabled(string $form): bool;
+    public function isFormEnabled(string $form): bool
+    {
+        return in_array($form, $this->getEnabledForms(), true);
+    }
+
+    /**
+     * Retrieve the forms enabled in the configuration
+     *
+     * @return string[]
+     */
+    abstract public function getEnabledForms(): array;
 
     /**
      * Retrieve if validator is globally enabled

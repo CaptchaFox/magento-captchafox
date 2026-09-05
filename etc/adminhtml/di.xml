@@ -12,11 +12,10 @@
     <type name="CaptchaFox\Core\Observer\Validate\Admin">
         <arguments>
             <argument name="data" xsi:type="array">
-                <item name="actions" xsi:type="array">
-                    <item name="login" xsi:type="string">
-                        Magento\Backend\Controller\Adminhtml\Index\Index</item>
-                    <item name="password" xsi:type="string">
-                        Magento\User\Controller\Adminhtml\Auth\Forgotpassword</item>
+                <item name="routes" xsi:type="array">
+                    <item name="adminhtml_index_index" xsi:type="string">login</item>
+                    <item name="adminhtml_auth_login" xsi:type="string">login</item>
+                    <item name="adminhtml_auth_forgotpassword" xsi:type="string">password</item>
                 </item>
             </argument>
         </arguments>

@@ -14,20 +14,15 @@
             <argument name="persistor" xsi:type="object">
                 CaptchaFox\Core\Model\Persistor\Frontend</argument>
             <argument name="data" xsi:type="array">
-                <item name="actions" xsi:type="array">
-                    <item name="contact" xsi:type="string">Magento\Contact\Controller\Index\Post</item>
-                    <item name="password" xsi:type="string">
-                        Magento\Customer\Controller\Account\ForgotPasswordPost</item>
-                    <item name="register" xsi:type="string">
-                        Magento\Customer\Controller\Account\CreatePost</item>
-                    <item name="login" xsi:type="string">
-                        Magento\Customer\Controller\Account\LoginPost</item>
-                    <item name="login-ajax" xsi:type="string">Magento\Customer\Controller\Ajax\Login</item>
-                    <item name="review" xsi:type="string">Magento\Review\Controller\Product\Post</item>
-                    <item name="send-friend" xsi:type="string">
-                        Magento\SendFriend\Controller\Product\Sendmail</item>
-                    <item name="newsletter" xsi:type="string">
-                        Magento\Newsletter\Controller\Subscriber\NewAction</item>
+                <item name="routes" xsi:type="array">
+                    <item name="contact_index_post" xsi:type="string">contact</item>
+                    <item name="customer_account_forgotpasswordpost" xsi:type="string">password</item>
+                    <item name="customer_account_createpost" xsi:type="string">register</item>
+                    <item name="customer_account_loginpost" xsi:type="string">login</item>
+                    <item name="customer_ajax_login" xsi:type="string">login-ajax</item>
+                    <item name="review_product_post" xsi:type="string">review</item>
+                    <item name="sendfriend_product_sendmail" xsi:type="string">send-friend</item>
+                    <item name="newsletter_subscriber_new" xsi:type="string">newsletter</item>
                 </item>
             </argument>
         </arguments>
