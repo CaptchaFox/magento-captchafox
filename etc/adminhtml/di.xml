@@ -9,17 +9,14 @@
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
-    <type name="CaptchaFox\Core\Observer\Validate\Admin">
+    <virtualType name="CaptchaFox\Core\Observer\Validate\Admin\ForgotPassword"
+        type="CaptchaFox\Core\Observer\Validate\Admin">
         <arguments>
             <argument name="data" xsi:type="array">
-                <item name="routes" xsi:type="array">
-                    <item name="adminhtml_index_index" xsi:type="string">login</item>
-                    <item name="adminhtml_auth_login" xsi:type="string">login</item>
-                    <item name="adminhtml_auth_forgotpassword" xsi:type="string">password</item>
-                </item>
+                <item name="form" xsi:type="string">password</item>
             </argument>
         </arguments>
-    </type>
+    </virtualType>
     <preference for="CaptchaFox\Core\Model\ConfigProviderInterface"
         type="CaptchaFox\Core\Model\ConfigProvider\Adminhtml" />
 </config>

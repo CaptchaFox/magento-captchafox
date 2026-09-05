@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
 /**
- * Copyright (C) 2025 Scoria Labs GmbH
+ * Copyright (C) 2026 Scoria Labs GmbH
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -13,20 +13,72 @@
         <arguments>
             <argument name="persistor" xsi:type="object">
                 CaptchaFox\Core\Model\Persistor\Frontend</argument>
-            <argument name="data" xsi:type="array">
-                <item name="routes" xsi:type="array">
-                    <item name="contact_index_post" xsi:type="string">contact</item>
-                    <item name="customer_account_forgotpasswordpost" xsi:type="string">password</item>
-                    <item name="customer_account_createpost" xsi:type="string">register</item>
-                    <item name="customer_account_loginpost" xsi:type="string">login</item>
-                    <item name="customer_ajax_login" xsi:type="string">login-ajax</item>
-                    <item name="review_product_post" xsi:type="string">review</item>
-                    <item name="sendfriend_product_sendmail" xsi:type="string">send-friend</item>
-                    <item name="newsletter_subscriber_new" xsi:type="string">newsletter</item>
-                </item>
-            </argument>
         </arguments>
     </type>
+    <virtualType name="CaptchaFox\Core\Observer\Validate\Frontend\Contact"
+        type="CaptchaFox\Core\Observer\Validate\Frontend">
+        <arguments>
+            <argument name="data" xsi:type="array">
+                <item name="form" xsi:type="string">contact</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="CaptchaFox\Core\Observer\Validate\Frontend\ForgotPassword"
+        type="CaptchaFox\Core\Observer\Validate\Frontend">
+        <arguments>
+            <argument name="data" xsi:type="array">
+                <item name="form" xsi:type="string">password</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="CaptchaFox\Core\Observer\Validate\Frontend\CreateAccount"
+        type="CaptchaFox\Core\Observer\Validate\Frontend">
+        <arguments>
+            <argument name="data" xsi:type="array">
+                <item name="form" xsi:type="string">register</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="CaptchaFox\Core\Observer\Validate\Frontend\Login"
+        type="CaptchaFox\Core\Observer\Validate\Frontend">
+        <arguments>
+            <argument name="data" xsi:type="array">
+                <item name="form" xsi:type="string">login</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="CaptchaFox\Core\Observer\Validate\Frontend\AjaxLogin"
+        type="CaptchaFox\Core\Observer\Validate\Frontend">
+        <arguments>
+            <argument name="data" xsi:type="array">
+                <item name="form" xsi:type="string">login-ajax</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="CaptchaFox\Core\Observer\Validate\Frontend\Review"
+        type="CaptchaFox\Core\Observer\Validate\Frontend">
+        <arguments>
+            <argument name="data" xsi:type="array">
+                <item name="form" xsi:type="string">review</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="CaptchaFox\Core\Observer\Validate\Frontend\SendFriend"
+        type="CaptchaFox\Core\Observer\Validate\Frontend">
+        <arguments>
+            <argument name="data" xsi:type="array">
+                <item name="form" xsi:type="string">send-friend</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="CaptchaFox\Core\Observer\Validate\Frontend\Newsletter"
+        type="CaptchaFox\Core\Observer\Validate\Frontend">
+        <arguments>
+            <argument name="data" xsi:type="array">
+                <item name="form" xsi:type="string">newsletter</item>
+            </argument>
+        </arguments>
+    </virtualType>
     <type name="CaptchaFox\Core\Model\Persistor\Frontend">
         <arguments>
             <argument name="reviewSession" xsi:type="object">Magento\Review\Model\Session</argument>

@@ -9,8 +9,12 @@
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
-    <event name="controller_action_predispatch">
-        <observer name="captchafox_admin_server_validation"
-            instance="CaptchaFox\Core\Observer\Validate\Admin" />
+    <event name="controller_action_predispatch_adminhtml_auth_forgotpassword">
+        <observer name="captchafox_validate_admin_password"
+            instance="CaptchaFox\Core\Observer\Validate\Admin\ForgotPassword" />
+    </event>
+    <event name="admin_user_authenticate_before">
+        <observer name="captchafox_validate_admin_login"
+            instance="CaptchaFox\Core\Observer\Validate\AdminLogin" />
     </event>
 </config>

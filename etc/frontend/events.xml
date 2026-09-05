@@ -9,8 +9,36 @@
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
-    <event name="controller_action_predispatch">
-        <observer name="captchafox_frontend_server_validation"
-            instance="CaptchaFox\Core\Observer\Validate\Frontend" />
+    <event name="controller_action_predispatch_contact_index_post">
+        <observer name="captchafox_validate_contact"
+            instance="CaptchaFox\Core\Observer\Validate\Frontend\Contact" />
+    </event>
+    <event name="controller_action_predispatch_customer_account_forgotpasswordpost">
+        <observer name="captchafox_validate_password"
+            instance="CaptchaFox\Core\Observer\Validate\Frontend\ForgotPassword" />
+    </event>
+    <event name="controller_action_predispatch_customer_account_createpost">
+        <observer name="captchafox_validate_register"
+            instance="CaptchaFox\Core\Observer\Validate\Frontend\CreateAccount" />
+    </event>
+    <event name="controller_action_predispatch_customer_account_loginpost">
+        <observer name="captchafox_validate_login"
+            instance="CaptchaFox\Core\Observer\Validate\Frontend\Login" />
+    </event>
+    <event name="controller_action_predispatch_customer_ajax_login">
+        <observer name="captchafox_validate_login_ajax"
+            instance="CaptchaFox\Core\Observer\Validate\Frontend\AjaxLogin" />
+    </event>
+    <event name="controller_action_predispatch_review_product_post">
+        <observer name="captchafox_validate_review"
+            instance="CaptchaFox\Core\Observer\Validate\Frontend\Review" />
+    </event>
+    <event name="controller_action_predispatch_sendfriend_product_sendmail">
+        <observer name="captchafox_validate_send_friend"
+            instance="CaptchaFox\Core\Observer\Validate\Frontend\SendFriend" />
+    </event>
+    <event name="controller_action_predispatch_newsletter_subscriber_new">
+        <observer name="captchafox_validate_newsletter"
+            instance="CaptchaFox\Core\Observer\Validate\Frontend\Newsletter" />
     </event>
 </config>

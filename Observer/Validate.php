@@ -43,9 +43,10 @@ abstract class Validate implements ObserverInterface
 
     protected ?PersistorInterface $persistor = null;
 
-    protected array $routes = [];
-
-    protected bool $checkedRoutes = false;
+    /**
+     * @var string CaptchaFox form this observer instance protects
+     */
+    protected string $form = '';
 
     public ?ActionInterface $action = null;
 
@@ -81,31 +82,20 @@ abstract class Validate implements ObserverInterface
         $this->redirect       = $redirect;
         $this->logger         = $logger;
         $this->persistor      = $persistor;
-        $this->routes         = $this->prepareRoutes($data['routes'] ?? []);
+        $this->form           = (string)($data['form'] ?? '');
 
-        if (!empty($data['actions'])) {
-            $this->logger->warning(
-                'CaptchaFox: the "actions" observer argument maps controller classes and is no longer '
-                . 'supported, it was ignored. Map full action names with the "routes" argument instead.'
-            );
+        foreach (['actions', 'routes'] as $legacy) {
+            if (!empty($data[$legacy])) {
+                $this->logger->warning(
+                    sprintf(
+                        'CaptchaFox: the "%s" observer argument is no longer supported and was ignored. '
+                        . 'Forms are now bound to their controller_action_predispatch_<full_action_name> '
+                        . 'event and take a single "form" argument.',
+                        $legacy
+                    )
+                );
+            }
         }
-    }
-
-    /**
-     * Normalise the configured routes
-     *
-     * @param array $routes
-     * @return string[]
-     */
-    protected function prepareRoutes(array $routes): array
-    {
-        $prepared = [];
-
-        foreach ($routes as $fullActionName => $form) {
-            $prepared[strtolower((string)$fullActionName)] = (string)$form;
-        }
-
-        return $prepared;
     }
 
     /**
@@ -174,11 +164,7 @@ abstract class Validate implements ObserverInterface
             return false;
         }
 
-        $this->checkRoutes();
-
-        $form = $this->getForm();
-
-        return $form !== null && $this->isFormEnabled($form);
+        return $this->form !== '' && $this->isFormEnabled($this->form);
     }
 
     /**
@@ -188,34 +174,7 @@ abstract class Validate implements ObserverInterface
      */
     public function getForm(): ?string
     {
-        if ($this->request === null) {
-            return null;
-        }
-
-        return $this->routes[strtolower($this->request->getFullActionName())] ?? null;
-    }
-
-    /**
-     * Warn once when an enabled form has no route mapped and would silently not be validated
-     *
-     * @return void
-     */
-    protected function checkRoutes(): void
-    {
-        if ($this->checkedRoutes) {
-            return;
-        }
-        $this->checkedRoutes = true;
-
-        $unmapped = array_diff($this->getEnabledForms(), $this->routes);
-        if ($unmapped) {
-            $this->logger->warning(
-                sprintf(
-                    'CaptchaFox: no route is mapped for the enabled form(s) "%s", they are not validated.',
-                    implode(', ', $unmapped)
-                )
-            );
-        }
+        return $this->form !== '' ? $this->form : null;
     }
 
     /**
