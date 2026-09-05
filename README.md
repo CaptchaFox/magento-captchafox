@@ -70,6 +70,8 @@ Navigate to *Stores > Configuration > Services > CaptchaFox*
 - **Mode**: the widget mode (inline, popup)
 - **Language**: the widget language (defaults to auto-detect)
 - **Forms to validate**: the frontend forms where a CaptchaFox validation is required
+- **Skip validation for logged in customers**: disabled by default. When enabled, customers with an
+  active session are not shown the widget and their submissions are not validated server side.
 
 #### Admin Panel
 

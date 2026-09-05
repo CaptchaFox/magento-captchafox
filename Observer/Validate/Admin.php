@@ -25,13 +25,12 @@ class Admin extends Validate
     }
 
     /**
-     * Test if the form is enabled
+     * Retrieve the forms enabled in the configuration
      *
-     * @param string $form
-     * @return bool
+     * @return string[]
      */
-    public function isFormEnabled(string $form): bool
+    public function getEnabledForms(): array
     {
-        return in_array($form, $this->config->getAdminForms());
+        return $this->config->getAdminForms();
     }
 }

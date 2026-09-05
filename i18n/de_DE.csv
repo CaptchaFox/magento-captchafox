@@ -11,6 +11,8 @@
 "Mode","Modus"
 "Language Code","Sprache"
 "Forms to validate","Zu validierende Formulare"
+"Skip validation for logged in customers","Validierung für angemeldete Kunden überspringen"
+"When enabled, the widget is hidden and no captcha response is required for customers with an active session.","Wenn aktiviert, wird das Widget für Kunden mit einer aktiven Sitzung ausgeblendet und es ist keine Captcha-Antwort erforderlich."
 "Admin Panel","Adminbereich"
 "please complete the security field or wait a few seconds before submitting the form.","Bitte füllen Sie das Sicherheitsfeld aus oder warten Sie einige Sekunden, bevor Sie das Formular absenden."
 "unable to validate the form, the secret key is missing.","Das Formular konnte nicht validiert werden, da der geheime Schlüssel fehlt."

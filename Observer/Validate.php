@@ -14,11 +14,13 @@ use Exception;
 use Magento\Framework\App\ActionInterface;
 use Magento\Framework\App\Request\Http as Request;
 use Magento\Framework\App\Response\Http as Response;
+use Magento\Framework\App\Response\RedirectInterface;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Framework\Message\ManagerInterface;
 use Magento\Framework\Phrase;
 use Magento\Framework\Serialize\Serializer\Json;
+use Psr\Log\LoggerInterface;
 use CaptchaFox\Core\Helper\Config;
 use CaptchaFox\Core\Model\PersistorInterface;
 use CaptchaFox\Core\Model\Validator;
@@ -35,9 +37,16 @@ abstract class Validate implements ObserverInterface
 
     protected Config $config;
 
+    protected RedirectInterface $redirect;
+
+    protected LoggerInterface $logger;
+
     protected ?PersistorInterface $persistor = null;
 
-    protected array $actions = [];
+    /**
+     * @var string CaptchaFox form this observer instance protects
+     */
+    protected string $form = '';
 
     public ?ActionInterface $action = null;
 
@@ -49,6 +58,8 @@ abstract class Validate implements ObserverInterface
      * @param Validator $validator
      * @param Json $json
      * @param Config $config
+     * @param RedirectInterface $redirect
+     * @param LoggerInterface $logger
      * @param PersistorInterface|null $persistor
      * @param array $data
      */
@@ -58,6 +69,8 @@ abstract class Validate implements ObserverInterface
         Validator $validator,
         Json $json,
         Config $config,
+        RedirectInterface $redirect,
+        LoggerInterface $logger,
         ?PersistorInterface $persistor = null,
         array $data = []
     ) {
@@ -66,8 +79,23 @@ abstract class Validate implements ObserverInterface
         $this->validator      = $validator;
         $this->json           = $json;
         $this->config         = $config;
+        $this->redirect       = $redirect;
+        $this->logger         = $logger;
         $this->persistor      = $persistor;
-        $this->actions        = $data['actions'] ?? [];
+        $this->form           = (string)($data['form'] ?? '');
+
+        foreach (['actions', 'routes'] as $legacy) {
+            if (!empty($data[$legacy])) {
+                $this->logger->warning(
+                    sprintf(
+                        'CaptchaFox: the "%s" observer argument is no longer supported and was ignored. '
+                        . 'Forms are now bound to their controller_action_predispatch_<full_action_name> '
+                        . 'event and take a single "form" argument.',
+                        $legacy
+                    )
+                );
+            }
+        }
     }
 
     /**
@@ -102,7 +130,9 @@ abstract class Validate implements ObserverInterface
      */
     public function getCfResponse(): ?string
     {
-        return $this->request?->getParam('cf-captcha-response');
+        $response = $this->request?->getParam('cf-captcha-response');
+
+        return is_string($response) ? $response : null;
     }
 
     /**
@@ -114,7 +144,7 @@ abstract class Validate implements ObserverInterface
     protected function error(Phrase $message): void
     {
         $this->messageManager->addErrorMessage($message);
-        $this->response->setRedirect($this->request?->getServer('HTTP_REFERER', '/') ?? '/');
+        $this->response->setRedirect($this->redirect->getRefererUrl());
 
         $this->response->sendResponse();
         exit();
@@ -134,13 +164,17 @@ abstract class Validate implements ObserverInterface
             return false;
         }
 
-        foreach ($this->actions as $form => $instance) {
-            if ($this->isFormEnabled($form) && is_a($this->action, $instance)) {
-                return true;
-            }
-        }
+        return $this->form !== '' && $this->isFormEnabled($this->form);
+    }
 
-        return false;
+    /**
+     * Retrieve the CaptchaFox form protecting the current request
+     *
+     * @return string|null
+     */
+    public function getForm(): ?string
+    {
+        return $this->form !== '' ? $this->form : null;
     }
 
     /**
@@ -149,7 +183,17 @@ abstract class Validate implements ObserverInterface
      * @param string $form
      * @return bool
      */
-    abstract public function isFormEnabled(string $form): bool;
+    public function isFormEnabled(string $form): bool
+    {
+        return in_array($form, $this->getEnabledForms(), true);
+    }
+
+    /**
+     * Retrieve the forms enabled in the configuration
+     *
+     * @return string[]
+     */
+    abstract public function getEnabledForms(): array;
 
     /**
      * Retrieve if validator is globally enabled

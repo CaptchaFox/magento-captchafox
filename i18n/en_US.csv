@@ -11,6 +11,8 @@
 "Mode","Mode"
 "Language Code","Language Code"
 "Forms to validate","Forms to validate"
+"Skip validation for logged in customers","Skip validation for logged in customers"
+"When enabled, the widget is hidden and no captcha response is required for customers with an active session.","When enabled, the widget is hidden and no captcha response is required for customers with an active session."
 "Admin Panel","Admin Panel"
 "please complete the security field or wait a few seconds before submitting the form.","please validate the security field or wait a few seconds before validating."
 "unable to validate the form, the secret key is missing.","unable to validate the form, the secret key is missing."

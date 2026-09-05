@@ -24,6 +24,7 @@ define([
      */
     canShow: function () {
       if (
+        this.config.skipLoggedIn &&
         this.customer().hasOwnProperty('firstname') &&
         this.customer().firstname
       ) {
