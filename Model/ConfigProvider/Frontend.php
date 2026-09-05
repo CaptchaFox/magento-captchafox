@@ -39,6 +39,7 @@ class Frontend implements ConfigProviderInterface
                 'lang'   => $this->config->getFrontendLanguage(),
                 'mode'    => $this->config->getFrontendMode(),
                 'forms'   => $this->config->getFrontendForms(),
+                'skipLoggedIn' => $this->config->isSkippedForLoggedInCustomers(),
             ]
         ];
     }

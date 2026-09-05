@@ -16,6 +16,7 @@
                 <theme>light</theme>
                 <language>auto</language>
                 <mode>inline</mode>
+                <skip_logged_in>0</skip_logged_in>
             </frontend>
             <adminhtml>
                 <enabled>0</enabled>

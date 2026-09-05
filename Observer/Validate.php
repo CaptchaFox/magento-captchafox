@@ -14,6 +14,7 @@ use Exception;
 use Magento\Framework\App\ActionInterface;
 use Magento\Framework\App\Request\Http as Request;
 use Magento\Framework\App\Response\Http as Response;
+use Magento\Framework\App\Response\RedirectInterface;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Framework\Message\ManagerInterface;
@@ -35,6 +36,8 @@ abstract class Validate implements ObserverInterface
 
     protected Config $config;
 
+    protected RedirectInterface $redirect;
+
     protected ?PersistorInterface $persistor = null;
 
     protected array $actions = [];
@@ -49,6 +52,7 @@ abstract class Validate implements ObserverInterface
      * @param Validator $validator
      * @param Json $json
      * @param Config $config
+     * @param RedirectInterface $redirect
      * @param PersistorInterface|null $persistor
      * @param array $data
      */
@@ -58,6 +62,7 @@ abstract class Validate implements ObserverInterface
         Validator $validator,
         Json $json,
         Config $config,
+        RedirectInterface $redirect,
         ?PersistorInterface $persistor = null,
         array $data = []
     ) {
@@ -66,6 +71,7 @@ abstract class Validate implements ObserverInterface
         $this->validator      = $validator;
         $this->json           = $json;
         $this->config         = $config;
+        $this->redirect       = $redirect;
         $this->persistor      = $persistor;
         $this->actions        = $data['actions'] ?? [];
     }
@@ -102,7 +108,9 @@ abstract class Validate implements ObserverInterface
      */
     public function getCfResponse(): ?string
     {
-        return $this->request?->getParam('cf-captcha-response');
+        $response = $this->request?->getParam('cf-captcha-response');
+
+        return is_string($response) ? $response : null;
     }
 
     /**
@@ -114,7 +122,7 @@ abstract class Validate implements ObserverInterface
     protected function error(Phrase $message): void
     {
         $this->messageManager->addErrorMessage($message);
-        $this->response->setRedirect($this->request?->getServer('HTTP_REFERER', '/') ?? '/');
+        $this->response->setRedirect($this->redirect->getRefererUrl());
 
         $this->response->sendResponse();
         exit();

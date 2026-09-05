@@ -13,6 +13,7 @@ namespace CaptchaFox\Core\Observer\Validate;
 use Magento\Customer\Controller\Ajax\Login as AjaxLoginPost;
 use Magento\Customer\Model\Session as CustomerSession;
 use Magento\Framework\App\Response\Http as Response;
+use Magento\Framework\App\Response\RedirectInterface;
 use Magento\Framework\Message\ManagerInterface;
 use Magento\Framework\Phrase;
 use Magento\Framework\Serialize\Serializer\Json;
@@ -31,6 +32,7 @@ class Frontend extends Validate
      * @param Validator $validator
      * @param Json $json
      * @param Config $config
+     * @param RedirectInterface $redirect
      * @param CustomerSession $customerSession
      * @param PersistorInterface|null $persistor
      * @param array $data
@@ -41,13 +43,14 @@ class Frontend extends Validate
         Validator $validator,
         Json $json,
         Config $config,
+        RedirectInterface $redirect,
         CustomerSession $customerSession,
         ?PersistorInterface $persistor = null,
         array $data = []
     ) {
         $this->customerSession = $customerSession;
 
-        parent::__construct($messageManager, $response, $validator, $json, $config, $persistor, $data);
+        parent::__construct($messageManager, $response, $validator, $json, $config, $redirect, $persistor, $data);
     }
 
 
@@ -58,7 +61,7 @@ class Frontend extends Validate
      */
     public function canValidate(): bool
     {
-        if ($this->customerSession->isLoggedIn()) {
+        if ($this->config->isSkippedForLoggedInCustomers() && $this->customerSession->isLoggedIn()) {
             return false;
         }
 
@@ -94,7 +97,8 @@ class Frontend extends Validate
     public function getCfResponse(): ?string
     {
         if ($this->action instanceof AjaxLoginPost) {
-            return $this->json->unserialize($this->request?->getContent() ?? '{}')['cf-captcha-response'] ?? null;
+            $response = $this->json->unserialize($this->request?->getContent() ?? '{}')['cf-captcha-response'] ?? null;
+            return is_string($response) ? $response : null;
         }
         return parent::getCfResponse();
     }

@@ -23,6 +23,7 @@ class Config extends AbstractHelper
     public const CAPTCHAFOX_CONFIG_PATH_FRONTEND_LANGUAGE = 'captchafox/frontend/language';
     public const CAPTCHAFOX_CONFIG_PATH_FRONTEND_MODE = 'captchafox/frontend/mode';
     public const CAPTCHAFOX_CONFIG_PATH_FRONTEND_FORMS = 'captchafox/frontend/forms';
+    public const CAPTCHAFOX_CONFIG_PATH_FRONTEND_SKIP_LOGGED_IN = 'captchafox/frontend/skip_logged_in';
 
     public const CAPTCHAFOX_CONFIG_PATH_ADMINHTML_ENABLED = 'captchafox/adminhtml/enabled';
     public const CAPTCHAFOX_CONFIG_PATH_ADMINHTML_THEME = 'captchafox/adminhtml/theme';
@@ -188,6 +189,22 @@ class Config extends AbstractHelper
         );
 
         return $forms ? array_filter(explode(',', $forms)) : [];
+    }
+
+    /**
+     * Skip the storefront validation for logged in customers
+     *
+     * Disabled by default: skipping the validation means an authenticated session is enough
+     * to submit any protected storefront form without a captcha response.
+     *
+     * @return bool
+     */
+    public function isSkippedForLoggedInCustomers(): bool
+    {
+        return $this->scopeConfig->isSetFlag(
+            self::CAPTCHAFOX_CONFIG_PATH_FRONTEND_SKIP_LOGGED_IN,
+            ScopeInterface::SCOPE_STORE
+        );
     }
 
     /**

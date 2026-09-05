@@ -26,6 +26,7 @@ define([
       forms: [],
       mode: 'normal',
       theme: 'auto',
+      skipLoggedIn: false,
     },
     action: 'default',
     mode: '', // Override config value if not empty

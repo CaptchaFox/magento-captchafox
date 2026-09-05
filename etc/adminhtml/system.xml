@@ -66,6 +66,16 @@
                         <field id="enabled">1</field>
                     </depends>
                 </field>
+                <field id="skip_logged_in" translate="label comment" type="select" sortOrder="60"
+                    showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Skip validation for logged in customers</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>When enabled, the widget is hidden and no captcha response is required
+                        for customers with an active session.</comment>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
             </group>
             <group id="adminhtml" translate="label" type="text" sortOrder="1" showInDefault="1"
                 showInWebsite="0" showInStore="0">
