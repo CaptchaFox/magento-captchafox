@@ -1,3 +1,6 @@
+## 1.3.0
+- Added secret encryption
+
 ## 1.2.0
 
 - Storefront validation is no longer skipped for logged in customers by default. The previous

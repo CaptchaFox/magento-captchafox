@@ -11,6 +11,8 @@ declare(strict_types=1);
 namespace CaptchaFox\Core\Helper;
 
 use Magento\Framework\App\Helper\AbstractHelper;
+use Magento\Framework\App\Helper\Context;
+use Magento\Framework\Encryption\EncryptorInterface;
 use Magento\Store\Model\ScopeInterface;
 
 class Config extends AbstractHelper
@@ -30,6 +32,21 @@ class Config extends AbstractHelper
     public const CAPTCHAFOX_CONFIG_PATH_ADMINHTML_MODE = 'captchafox/adminhtml/mode';
     public const CAPTCHAFOX_CONFIG_PATH_ADMINHTML_FORMS = 'captchafox/adminhtml/forms';
     public const CAPTCHAFOX_CONFIG_PATH_ADMINHTML_LANGUAGE = 'captchafox/adminhtml/language';
+
+    protected EncryptorInterface $encryptor;
+
+    /**
+     * @param Context $context
+     * @param EncryptorInterface $encryptor
+     */
+    public function __construct(
+        Context $context,
+        EncryptorInterface $encryptor
+    ) {
+        $this->encryptor = $encryptor;
+
+        parent::__construct($context);
+    }
 
     /**
      * Is CaptchaFox enabled on front
@@ -64,10 +81,34 @@ class Config extends AbstractHelper
      */
     public function getSecretKey(): string
     {
-        return (string)$this->scopeConfig->getValue(
+        $value = (string)$this->scopeConfig->getValue(
             self::CAPTCHAFOX_CONFIG_PATH_SECRET_KEY,
             ScopeInterface::SCOPE_STORE
         );
+
+        if (!$this->isEncrypted($value)) {
+            return $value;
+        }
+
+        // Encryptor::decrypt() returns an empty string when it cannot read the value, for
+        // instance after the encryption key was rotated. Keep the stored value in that case so
+        // the API reports an invalid secret instead of the module reporting a missing one.
+        $decrypted = (string)$this->encryptor->decrypt($value);
+
+        return $decrypted !== '' ? $decrypted : $value;
+    }
+
+    /**
+     * Test if a stored value carries the Magento encrypted value format
+     *
+     * Encrypted values are prefixed with their key and cipher version, e.g. "0:3:<base64>".
+     *
+     * @param string $value
+     * @return bool
+     */
+    protected function isEncrypted(string $value): bool
+    {
+        return (bool)preg_match('/^\d+:\d+:/', $value);
     }
 
     /**
