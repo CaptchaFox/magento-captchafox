@@ -69,10 +69,11 @@ define([
      * Render widget only when modal is open
      */
     loginAjax: function () {
+      // Namespaced, the modal widget itself listens to transitionend as well
       $(this.authentication)
-        .off('transitionend')
+        .off('transitionend.captchafox')
         .on(
-          'transitionend',
+          'transitionend.captchafox',
           function (event) {
             const target = $(event.target);
             target.find('.captchafox').empty();
