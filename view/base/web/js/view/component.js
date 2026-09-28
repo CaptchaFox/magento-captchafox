@@ -96,7 +96,8 @@ define([
           action: this.action,
           lang: this.config.lang === 'auto' ? null : this.config.lang,
         });
-        if (typeof widgetId === 'undefined') {
+        // captchafox.render() resolves with null when the widget could not be rendered
+        if (widgetId === null || typeof widgetId === 'undefined') {
           this.element.innerText = $.mage.__('Unable to secure the form');
         } else {
           this.widgetId = widgetId;
