@@ -1,3 +1,9 @@
+## 1.2.1
+
+- Fixed the widget missing on composer installations. The module was registered with a
+  `vendor/composer/../` path, so Magento rejected its templates ("Invalid template file") and
+  rendered no CaptchaFox block in production mode, while the forms were still validated.
+
 ## 1.2.0
 
 - Storefront validation is no longer skipped for logged in customers by default. The previous
