@@ -22,7 +22,7 @@ class Validator
 
     protected Config $config;
 
-    protected array $errors;
+    protected array $errors = [];
 
     /**
      * @param Curl $curl

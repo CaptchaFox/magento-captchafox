@@ -1,18 +1,18 @@
 <?php
 namespace CaptchaFox\Core\Model\Config\Source;
 
-use Magento\Framework\Option\ArrayInterface;
+use Magento\Framework\Data\OptionSourceInterface;
 
 /**
  * Class Language
  * @package CaptchaFox\Core\Model\Config\Source
  */
-class Language implements ArrayInterface
+class Language implements OptionSourceInterface
 {
     /**
      * @return array
      */
-    public function toOptionArray()
+    public function toOptionArray(): array
     {
         $languageOptionArray = [
             ['label' => __('-- Auto Detected --'), 'value' => 'auto'],

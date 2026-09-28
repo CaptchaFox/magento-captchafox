@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace CaptchaFox\Core\Observer;
 
 use Exception;
+use Magento\Framework\App\ActionFlag;
 use Magento\Framework\App\ActionInterface;
 use Magento\Framework\App\Request\Http as Request;
 use Magento\Framework\App\Response\Http as Response;
@@ -41,6 +42,8 @@ abstract class Validate implements ObserverInterface
 
     protected LoggerInterface $logger;
 
+    protected ActionFlag $actionFlag;
+
     protected ?PersistorInterface $persistor = null;
 
     /**
@@ -60,6 +63,7 @@ abstract class Validate implements ObserverInterface
      * @param Config $config
      * @param RedirectInterface $redirect
      * @param LoggerInterface $logger
+     * @param ActionFlag $actionFlag
      * @param PersistorInterface|null $persistor
      * @param array $data
      */
@@ -71,6 +75,7 @@ abstract class Validate implements ObserverInterface
         Config $config,
         RedirectInterface $redirect,
         LoggerInterface $logger,
+        ActionFlag $actionFlag,
         ?PersistorInterface $persistor = null,
         array $data = []
     ) {
@@ -81,6 +86,7 @@ abstract class Validate implements ObserverInterface
         $this->config         = $config;
         $this->redirect       = $redirect;
         $this->logger         = $logger;
+        $this->actionFlag     = $actionFlag;
         $this->persistor      = $persistor;
         $this->form           = (string)($data['form'] ?? '');
 
@@ -136,7 +142,7 @@ abstract class Validate implements ObserverInterface
     }
 
     /**
-     * Send error
+     * Send error, the front controller skips the action and returns the redirect
      *
      * @param Phrase $message
      * @return void
@@ -145,9 +151,7 @@ abstract class Validate implements ObserverInterface
     {
         $this->messageManager->addErrorMessage($message);
         $this->response->setRedirect($this->redirect->getRefererUrl());
-
-        $this->response->sendResponse();
-        exit();
+        $this->actionFlag->set('', ActionInterface::FLAG_NO_DISPATCH, true);
     }
 
     /**

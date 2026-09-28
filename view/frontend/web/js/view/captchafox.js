@@ -39,7 +39,8 @@ define([
      * Before Render
      */
     beforeRender: function () {
-      if (this.action === 'login-ajax') {
+      // Widgets in a login modal are rendered when the modal opens
+      if (this.action === 'login-ajax' && !this.autoRendering) {
         this.loginAjax();
 
         const cart = customerData.get('cart');
@@ -68,10 +69,11 @@ define([
      * Render widget only when modal is open
      */
     loginAjax: function () {
+      // Namespaced, the modal widget itself listens to transitionend as well
       $(this.authentication)
-        .off('transitionend')
+        .off('transitionend.captchafox')
         .on(
-          'transitionend',
+          'transitionend.captchafox',
           function (event) {
             const target = $(event.target);
             target.find('.captchafox').empty();
@@ -83,15 +85,17 @@ define([
     },
 
     /**
-     * Reset captchafox when Ajax request is complete with error
+     * Reset captchafox when Ajax request is complete with error, the response token is single use
      */
     loginAjaxComplete: function () {
-      if (this.widgetId) {
+      // Modal widgets are rendered again on every open, bind the handler once
+      if (this.widgetId && !this.resetOnAjaxError) {
+        this.resetOnAjaxError = true;
         $(document).on(
           'ajaxComplete',
           function (event, xhr) {
             const result = xhr.responseJSON;
-            if (result.hasOwnProperty('errors') && result.errors) {
+            if (result && result.errors) {
               this.reset();
             }
           }.bind(this),
