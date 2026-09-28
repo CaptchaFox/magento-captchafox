@@ -31,11 +31,9 @@ define([
     action: 'default',
     mode: '', // Override config value if not empty
     theme: '', // Override config value if not empty,
-    containerId: '',
     widgetId: null,
     autoRendering: true,
     element: null,
-    maxInitAttempts: 40,
 
     /**
      * Initialize
@@ -54,8 +52,6 @@ define([
         this.config.theme = 'light';
       }
 
-      this.initWidget();
-
       return this;
     },
 
@@ -69,13 +65,12 @@ define([
     },
 
     /**
-     * Load widget
+     * Load widget, called by the afterRender binding with the element of this instance
      *
      * @param {object} element
      */
     load: function (element) {
       this.element = element;
-      this.element.setAttribute('data-captchafox-initialized', '1');
 
       if (!this.config.sitekey) {
         this.element.innerText = $.mage.__(
@@ -87,47 +82,6 @@ define([
           this.render();
         }
       }
-    },
-
-    /**
-     * Initialize widget element and render when available
-     *
-     * @param {number} attempt
-     */
-    initWidget: function (attempt) {
-      const tryCount = attempt || 0;
-
-      if (!this.canShow() || this.element) {
-        return;
-      }
-
-      const element = this.getElement();
-
-      if (element) {
-        this.load(element);
-        return;
-      }
-
-      if (tryCount < this.maxInitAttempts) {
-        window.setTimeout(this.initWidget.bind(this, tryCount + 1), 50);
-      }
-    },
-
-    /**
-     * Resolve widget element for current component instance
-     *
-     * @returns {HTMLElement|null}
-     */
-    getElement: function () {
-      if (this.containerId) {
-        return document.querySelector('#' + this.containerId + ' .captchafox');
-      }
-
-      return document.querySelector(
-        '.captchafox[data-captchafox-action="' +
-          this.action +
-          '"]:not([data-captchafox-initialized="1"])',
-      );
     },
 
     /**
