@@ -8,8 +8,21 @@
   ],
   "require": {
     "php": "^8",
+    "magento/framework": "*",
+    "magento/module-authorization": "*",
+    "magento/module-catalog": "*",
     "magento/module-config": "*",
-    "magento/framework": "*"
+    "magento/module-customer": "*",
+    "magento/module-store": "*",
+    "magento/module-ui": "*",
+    "magento/module-webapi": "*"
+  },
+  "suggest": {
+    "magento/module-checkout": "Protects the login in the checkout",
+    "magento/module-contact": "Protects the contact form",
+    "magento/module-csp": "Adds the CaptchaFox hosts to the Content Security Policy",
+    "magento/module-newsletter": "Protects the newsletter subscription",
+    "magento/module-send-friend": "Protects the email to a friend form"
   },
   "autoload": {
     "files": [
