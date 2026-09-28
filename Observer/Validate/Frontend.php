@@ -11,6 +11,8 @@ declare(strict_types=1);
 namespace CaptchaFox\Core\Observer\Validate;
 
 use Magento\Customer\Model\Session as CustomerSession;
+use Magento\Framework\App\ActionFlag;
+use Magento\Framework\App\ActionInterface;
 use Magento\Framework\App\Response\Http as Response;
 use Magento\Framework\App\Response\RedirectInterface;
 use Magento\Framework\Message\ManagerInterface;
@@ -35,6 +37,7 @@ class Frontend extends Validate
      * @param Config $config
      * @param RedirectInterface $redirect
      * @param LoggerInterface $logger
+     * @param ActionFlag $actionFlag
      * @param CustomerSession $customerSession
      * @param PersistorInterface|null $persistor
      * @param array $data
@@ -47,6 +50,7 @@ class Frontend extends Validate
         Config $config,
         RedirectInterface $redirect,
         LoggerInterface $logger,
+        ActionFlag $actionFlag,
         CustomerSession $customerSession,
         ?PersistorInterface $persistor = null,
         array $data = []
@@ -61,6 +65,7 @@ class Frontend extends Validate
             $config,
             $redirect,
             $logger,
+            $actionFlag,
             $persistor,
             $data
         );
@@ -129,9 +134,9 @@ class Frontend extends Validate
                 'message' => $message
             ];
             $this->response->representJson($this->json->serialize($data));
+            $this->actionFlag->set('', ActionInterface::FLAG_NO_DISPATCH, true);
 
-            $this->response->sendResponse();
-            exit();
+            return;
         }
 
         parent::error($message);
