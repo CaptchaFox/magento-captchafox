@@ -47,7 +47,7 @@
                                                                             xsi:type="array">
                                                                             <item name="component"
                                                                                 xsi:type="string">
-                                                                                ScoriaLabs_CaptchaFox/js/view/component</item>
+                                                                                ScoriaLabs_CaptchaFox/js/view/captchafox</item>
                                                                             <item name="displayArea"
                                                                                 xsi:type="string">
                                                                                 additional-login-form-fields</item>
