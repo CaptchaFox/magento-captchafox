@@ -2,3 +2,9 @@
     font-weight: bold;
     color: #c00;
 }
+
+/* Since Magento 2.4.8 the checkout hides the password fields with the dimVisible binding
+   (visibility: hidden) instead of display: none, and the widget sets its own elements visible. */
+.form-login .hidden-fields[style*="visibility: hidden"] .captchafox {
+    display: none;
+}
