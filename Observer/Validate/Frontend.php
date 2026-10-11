@@ -50,10 +50,10 @@ class Frontend extends Validate
         Config $config,
         RedirectInterface $redirect,
         LoggerInterface $logger,
-        ActionFlag $actionFlag,
         CustomerSession $customerSession,
         ?PersistorInterface $persistor = null,
-        array $data = []
+        array $data = [],
+        ?ActionFlag $actionFlag = null
     ) {
         $this->customerSession = $customerSession;
 
@@ -65,9 +65,9 @@ class Frontend extends Validate
             $config,
             $redirect,
             $logger,
-            $actionFlag,
             $persistor,
-            $data
+            $data,
+            $actionFlag
         );
     }
 
@@ -91,6 +91,18 @@ class Frontend extends Validate
      *
      * @return string[]
      */
+    /**
+     * Test if the form is enabled
+     *
+     * @param string $form
+     * @return bool
+     * @deprecated 1.2.0 Kept for code written against 1.1.x; use getEnabledForms().
+     */
+    public function isFormEnabled(string $form): bool
+    {
+        return in_array($form, $this->getEnabledForms());
+    }
+
     public function getEnabledForms(): array
     {
         return $this->config->getFrontendForms();

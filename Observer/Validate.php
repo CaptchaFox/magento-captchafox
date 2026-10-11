@@ -12,6 +12,7 @@ namespace CaptchaFox\Core\Observer;
 
 use Exception;
 use Magento\Framework\App\ActionFlag;
+use Magento\Framework\App\ObjectManager;
 use Magento\Framework\App\ActionInterface;
 use Magento\Framework\App\Request\Http as Request;
 use Magento\Framework\App\Response\Http as Response;
@@ -75,9 +76,9 @@ abstract class Validate implements ObserverInterface
         Config $config,
         RedirectInterface $redirect,
         LoggerInterface $logger,
-        ActionFlag $actionFlag,
         ?PersistorInterface $persistor = null,
-        array $data = []
+        array $data = [],
+        ?ActionFlag $actionFlag = null
     ) {
         $this->messageManager = $messageManager;
         $this->response       = $response;
@@ -86,7 +87,8 @@ abstract class Validate implements ObserverInterface
         $this->config         = $config;
         $this->redirect       = $redirect;
         $this->logger         = $logger;
-        $this->actionFlag     = $actionFlag;
+        // Last and optional, so that classes extending this observer with the arguments of 1.2.x keep working.
+        $this->actionFlag     = $actionFlag ?? ObjectManager::getInstance()->get(ActionFlag::class);
         $this->persistor      = $persistor;
         $this->form           = (string)($data['form'] ?? '');
 
